@@ -3,12 +3,10 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "db:generate": "turbo db:generate",
-    "db:push": "turbo db:push",
     "dev": "dotenv -- turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prepare": "husky install",
+    "prepare": "husky || true",
     "test": "turbo run test",
     "test:api": "turbo run test --filter=poc-backend",
     "test:client": "turbo run test --filter=poc-frontend",

@@ -1,42 +1,46 @@
 ARG NODE_VERSION=20.11.0
 
+FROM node:${NODE_VERSION}-alpine AS base
 
-# Local dev environment
-FROM node:${NODE_VERSION} AS dev
 
+
+FROM base AS builder
+ARG WORKSPACE_NAME=poc-backend
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+RUN apk update
+# Set working directory
 WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm pkg delete scripts.prepare && npm ci
-
+RUN npm install --global turbo
 COPY . .
+RUN turbo prune ${WORKSPACE_NAME} --docker
 
-RUN npm run prisma:generate
 
 
-# Build for production
-FROM node:${NODE_VERSION}-bookworm-slim AS build
-
+# Add lockfile and package.json's of isolated subworkspace
+FROM base AS installer
+ARG WORKSPACE_NAME=poc-backend
+RUN apk add --no-cache libc6-compat
+RUN apk update
 WORKDIR /app
 
-COPY --chown=node:node package*.json ./
-COPY --chown=node:node --from=dev /app/node_modules ./node_modules
-COPY --chown=node:node . .
+# First install dependencies (as they change less often)
+# COPY .gitignore .gitignore
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/package-lock.json ./package-lock.json
+RUN npm install
 
-RUN npm run build
+# Build the project and its dependencies
+COPY --from=builder /app/out/full/ .
+COPY turbo.json turbo.json
 
-ENV NODE_ENV production
-
-RUN npm pkg delete scripts.prepare && npm ci --only=production && npm cache clean --force
-
-USER node
+RUN npx turbo build --filter=${WORKSPACE_NAME}
 
 
-# Prod environment
-FROM node:${NODE_VERSION}-bookworm-slim AS prod
 
-COPY --chown=node:node --from=build /app/node_modules ./node_modules
-COPY --chown=node:node --from=build /app/dist ./dist
+FROM base AS runner
+WORKDIR /app
 
-CMD ["node", "dist/main.js"]
+COPY --from=installer /app .
+
+CMD ["node", "apps/api/dist/main.js"]

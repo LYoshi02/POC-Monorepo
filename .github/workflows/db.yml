@@ -5,13 +5,13 @@ on:
 
 # Allow one concurrent deployment
 concurrency:
-  group: 'deploy-group'
+  group: "deploy-group"
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.11.0
-          cache: 'npm'
+          cache: "npm"
       - name: Install dependencies
         run: npm install --workspace=@repo/database
       - name: Run migrations

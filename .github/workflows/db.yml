@@ -23,9 +23,9 @@ jobs:
       - name: Install dependencies
         run: npm install --workspace=@repo/database
       - name: Run migrations
+        working-directory: ./packages/database
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma migrate deploy
       - name: Display output
         run: echo "Database deployed sucessfully"
-      

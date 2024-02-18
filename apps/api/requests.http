@@ -1,0 +1,30 @@
+# Variables
+@noteId=1
+
+### Obtener todas las notas
+GET http://localhost:3000/notes
+
+### Obtener una nota
+GET http://localhost:3000/notes/{{noteId}}
+
+### Crear una nota
+POST http://localhost:3000/notes
+Content-Type: application/json
+
+{
+    "title": "Test note",
+    "content": "this is a note"
+}
+
+### Editar una nota
+PUT http://localhost:3000/notes/{{noteId}}
+Content-Type: application/json
+
+{
+    "title": "Test note (edited)",
+    "content": "this is a note"
+}
+
+
+### Eliminar una nota
+DELETE http://localhost:3000/notes/{{noteId}}

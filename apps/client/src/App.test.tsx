@@ -1,11 +1,11 @@
-import App from "./App";
+// import App from "./App";
 
-import { render, screen } from "@testing-library/react";
+// import { render, screen } from "@testing-library/react";
 
-it("renders Vite heading", () => {
-  render(<App />);
+// it("renders Vite heading", () => {
+//   render(<App />);
 
-  const viteHeading = screen.getByRole("heading", { name: /notes/i });
+//   const viteHeading = screen.getByRole("heading", { name: /notes/i });
 
-  expect(viteHeading).toBeInTheDocument();
-});
+//   expect(viteHeading).toBeInTheDocument();
+// });

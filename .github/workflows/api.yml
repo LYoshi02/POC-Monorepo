@@ -1,0 +1,39 @@
+name: Deploy api to Render
+
+on:
+  workflow_dispatch:
+
+# Allow one concurrent deployment
+concurrency:
+  group: "deploy-group"
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install
+      - name: Test code
+        run: npm run test:api
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+    steps:
+      - name: Deploy to Render
+        # Only run this step if the branch is main
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
+      - name: Display output
+        run: echo "Triggered backend deployment sucessfully"

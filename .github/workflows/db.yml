@@ -1,0 +1,31 @@
+name: Deploy database to Supabase
+
+on:
+  workflow_dispatch:
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'deploy-group'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Get code
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install --workspace=@repo/database
+      - name: Run migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npx prisma migrate deploy
+      - name: Display output
+        run: echo "Database deployed sucessfully"
+      

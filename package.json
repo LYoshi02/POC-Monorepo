@@ -7,7 +7,11 @@
     "db:push": "turbo db:push",
     "dev": "dotenv -- turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "turbo run test",
+    "test:api": "turbo run test --filter=poc-backend",
+    "test:client": "turbo run test --filter=poc-frontend",
+    "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",

@@ -9,8 +9,8 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "prepare": "husky || true",
-    "test": "turbo run test",
     "start:api": "node apps/api/dist/main.js",
+    "test": "turbo run test",
     "test:api": "turbo run test --filter=poc-backend",
     "test:client": "turbo run test --filter=poc-frontend",
     "test:watch": "turbo run test:watch"

@@ -26,11 +26,11 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
     steps:
       - name: Deploy to Render
-        # Only run this step if the branch is main
-        if: github.ref == 'refs/heads/main'
+        # Only run this step if the branch is main or development
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/development'
         env:
           deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |

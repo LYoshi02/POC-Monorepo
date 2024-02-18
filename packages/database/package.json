@@ -1,0 +1,23 @@
+{
+  "name": "@repo/database",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "types": "./index.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate",
+    "dev": "tsc -w"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.9.1"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "*",
+    "prisma": "^5.9.0"
+  }
+}

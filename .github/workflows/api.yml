@@ -26,7 +26,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+    environment: production
     steps:
       - name: Deploy to Render
         # Only run this step if the branch is main
@@ -36,4 +36,4 @@ jobs:
         run: |
           curl "$deploy_url"
       - name: Display output
-        run: echo "Triggered backend deployment sucessfully"
+        run: echo "Triggered api deployment sucessfully"

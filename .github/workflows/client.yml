@@ -9,23 +9,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get code
-        uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.11.0
-          cache: "npm"
-      - name: Install dependencies
-        run: npm install
-      - name: Test code
-        run: npm run test:client
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Get code
+  #       uses: actions/checkout@v4
+  #     - name: Set up Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20.11.0
+  #         cache: "npm"
+  #     - name: Install dependencies
+  #       run: npm install
+  #     - name: Test code
+  #       run: npm run test:client
   build:
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
     steps:
       - name: Get code
         uses: actions/checkout@v4

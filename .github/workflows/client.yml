@@ -36,6 +36,11 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm install
+      - name: "Create env file"
+        run: |
+          touch .env
+          echo VITE_API_BASE_ENDPOINT=${{ secrets.API_BASE_ENDPOINT }} >> .env
+          cat .env
       - name: Build project
         run: npm run build:client
       - name: Upload build artifact
@@ -64,6 +69,5 @@ jobs:
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          VITE_API_BASE_ENDPOINT: ${{ secrets.API_BASE_ENDPOINT }}
       - name: Display output
         run: echo "Deployed on ${{ steps.deploy-step.outputs.deploy-url }}"

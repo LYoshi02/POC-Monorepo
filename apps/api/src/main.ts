@@ -6,7 +6,8 @@ import getLogLevels from "./utils/getLogLevels";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: getLogLevels(process.env.NODE_ENV === "production")
+    logger: getLogLevels(process.env.NODE_ENV === "production"),
+    cors: true
   });
 
   const swaggerConfig = new DocumentBuilder()

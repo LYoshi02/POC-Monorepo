@@ -54,6 +54,29 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+input {
+  font-family: inherit;
+  padding: 1em 1.2em;
+  border: 1px solid #dfdfdf;
+  border-radius: 8px;
+  margin-right: 20px;
+}
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.note {
+  background-color: #f1f1f1;
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
+  border-radius: 8px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -63,6 +86,6 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #dfdfdf;
   }
 }

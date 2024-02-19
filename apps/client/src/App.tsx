@@ -1,35 +1,65 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import { useEffect, useState } from "react";
+
 import "./App.css";
+import NotesList from "./components/NotesList/NotesList";
+import NotesForm from "./components/NotesForm/NotesForm";
+import { fetchWrapper } from "./utils";
+import { Note } from "./types";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [notes, setNotes] = useState<Note[]>([]);
+
+  useEffect(() => {
+    const getNotes = async () => {
+      const notes: Note[] = await fetchWrapper<Note[]>({ path: "/notes" });
+      return notes;
+    };
+
+    void getNotes().then((notes) => {
+      setNotes(notes);
+    });
+  }, []);
+
+  const onCreateNote = async (title: string) => {
+    if (!title) return;
+
+    try {
+      const result = await fetchWrapper<Note>({
+        path: "/notes",
+        config: {
+          method: "POST",
+          data: { title }
+        }
+      });
+
+      setNotes((prevNotes) => [result, ...prevNotes]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onDeleteNote = async (noteId: number) => {
+    if (!noteId) return;
+
+    try {
+      await fetchWrapper<Note>({
+        path: `/notes/${noteId}`,
+        config: {
+          method: "DELETE"
+        }
+      });
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <p>Prueba 3 (from development 2)</p>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h1>Notes</h1>
+      <NotesForm onCreate={onCreateNote} />
+      <NotesList onDelete={onDeleteNote} notes={notes} />
+    </div>
   );
 }
 

@@ -4,7 +4,7 @@
   "scripts": {
     "build": "turbo build",
     "build:api": "turbo build --filter=poc-backend",
-    "build:client": "turbo build --filter=poc-frontend",
+    "build:client": "dotenv -- turbo build --filter=poc-frontend",
     "dev": "dotenv -- turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
